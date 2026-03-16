@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { PlusCircle, MinusCircle, Euro, Percent } from "lucide-react";
+import { useState, useMemo, Fragment } from "react";
+import { PlusCircle, MinusCircle, Euro, Percent, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -64,47 +64,54 @@ export default function Home() {
     isPercentage: boolean = false
   ) => (
     <Card className="flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="p-4">
+        <CardTitle className="text-xl">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow space-y-4">
+      <CardContent className="flex-grow space-y-2 p-4 pt-0">
         {items.map((item, index) => (
-          <div key={item.id} className="flex items-center gap-2">
-            <div className="relative w-full">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    {isPercentage ? <Percent className="h-4 w-4 text-muted-foreground" /> : <Euro className="h-4 w-4 text-muted-foreground" />}
-                </div>
-                <Input
-                type="number"
-                placeholder={placeholder}
-                value={item.value}
-                onChange={(e) => handleItemChange(item.id, e.target.value, setter)}
-                className="pl-9"
-                aria-label={`${title} ${index + 1}`}
-                min="0"
-                step="0.01"
-                />
+          <Fragment key={item.id}>
+            <div className="flex items-center gap-2">
+              <div className="relative w-full">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                      {isPercentage ? <Percent className="h-4 w-4 text-muted-foreground" /> : <Euro className="h-4 w-4 text-muted-foreground" />}
+                  </div>
+                  <Input
+                  type="number"
+                  placeholder={placeholder}
+                  value={item.value}
+                  onChange={(e) => handleItemChange(item.id, e.target.value, setter)}
+                  className="pl-9 h-9"
+                  aria-label={`${title} ${index + 1}`}
+                  min="0"
+                  step="0.01"
+                  />
+              </div>
+              {items.length > 1 && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleRemoveItem(item.id, setter)}
+                  className="text-muted-foreground hover:text-destructive shrink-0 h-9 w-9"
+                  aria-label={`Rimuovi ${title} ${index + 1}`}
+                >
+                  <MinusCircle className="h-5 w-5" />
+                </Button>
+              )}
             </div>
-            {items.length > 1 && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleRemoveItem(item.id, setter)}
-                className="text-muted-foreground hover:text-destructive shrink-0"
-                aria-label={`Rimuovi ${title} ${index + 1}`}
-              >
-                <MinusCircle className="h-5 w-5" />
-              </Button>
+            {title === "Prezzi di Listino" && items.length > 1 && index < items.length - 1 && (
+              <div className="flex justify-center">
+                <Plus className="h-4 w-4 text-muted-foreground" />
+              </div>
             )}
-          </div>
+          </Fragment>
         ))}
       </CardContent>
-      <div className="p-6 pt-0">
+      <div className="p-4 pt-0">
       {items.length < 3 ? (
-        <Button variant="outline" className="w-full" onClick={() => handleAddItem(setter)}>
+        <Button variant="outline" size="sm" className="w-full" onClick={() => handleAddItem(setter)}>
             <PlusCircle className="mr-2 h-4 w-4" /> Aggiungi campo
         </Button>
-      ) : <div className="h-10"/> }
+      ) : <div className="h-9"/> }
       </div>
     </Card>
   );
@@ -140,58 +147,67 @@ export default function Home() {
     
     const totalDiscountValue = totalBasePrice - priceAfterDiscounts;
     const totalMarkupValue = finalPrice - priceAfterDiscounts;
+    
+    const totalDiscountPercentage = totalBasePrice > 0 ? (totalDiscountValue / totalBasePrice) * 100 : 0;
+    const totalMarkupPercentage = priceAfterDiscounts > 0 ? (totalMarkupValue / priceAfterDiscounts) * 100 : 0;
 
-    return { totalBasePrice, finalPrice, totalDiscountValue, totalMarkupValue };
+    return { totalBasePrice, finalPrice, totalDiscountValue, totalMarkupValue, totalDiscountPercentage, totalMarkupPercentage };
   }, [basePrices, discounts, markups]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="py-8 text-center">
-        <h1 className="font-headline text-4xl font-bold tracking-tight text-primary md:text-5xl">
+      <header className="py-6 text-center">
+        <h1 className="font-headline text-3xl font-bold tracking-tight text-primary md:text-4xl">
           CalcoloPrezzi Pro
         </h1>
-        <p className="mt-2 text-lg text-muted-foreground">
+        <p className="mt-1 text-base text-muted-foreground">
           Il tuo assistente per calcoli di prezzo rapidi ed eleganti.
         </p>
       </header>
 
-      <main className="container mx-auto max-w-7xl px-4 pb-16">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <main className="container mx-auto max-w-7xl px-4 pb-12">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {renderInputGroup("Prezzi di Listino", basePrices, setBasePrices, "Es. 100.00", false)}
             {renderInputGroup("Sconti %", discounts, setDiscounts, "Es. 10", true)}
             {renderInputGroup("Ricarichi %", markups, setMarkups, "Es. 20", true)}
         </div>
         
-        <Card className="mt-8 overflow-hidden bg-primary text-primary-foreground shadow-2xl">
-            <CardHeader>
-                <CardTitle className="text-2xl font-semibold">Riepilogo</CardTitle>
+        <Card className="mt-6 overflow-hidden bg-primary text-primary-foreground shadow-2xl">
+            <CardHeader className="p-4">
+                <CardTitle className="text-xl font-semibold">Riepilogo</CardTitle>
             </CardHeader>
-            <CardContent>
-                <div className="space-y-4 text-lg">
+            <CardContent className="p-4 pt-0">
+                <div className="space-y-3 text-base">
                     <div className="flex justify-between items-baseline">
                         <span className="text-primary-foreground/80">Prezzo base totale</span>
                         <span className="font-semibold">{formatCurrency(calculatedValues.totalBasePrice)}</span>
                     </div>
-                     <Separator className="my-2 bg-primary-foreground/20"/>
+                     <Separator className="bg-primary-foreground/20"/>
                     <div className="flex justify-between items-baseline">
                         <span className="text-primary-foreground/80">Sconto applicato</span>
-                        <span className="font-semibold">- {formatCurrency(calculatedValues.totalDiscountValue)}</span>
+                        <div className="flex items-baseline gap-2">
+                          <span className="font-semibold">- {formatCurrency(calculatedValues.totalDiscountValue)}</span>
+                          {calculatedValues.totalDiscountValue > 0 && <span className="text-sm text-primary-foreground/70">({calculatedValues.totalDiscountPercentage.toFixed(2)}%)</span>}
+                        </div>
                     </div>
                     <div className="flex justify-between items-baseline">
                         <span className="text-primary-foreground/80">Ricarico applicato</span>
-                        <span className="font-semibold">+ {formatCurrency(calculatedValues.totalMarkupValue)}</span>
+                         <div className="flex items-baseline gap-2">
+                          <span className="font-semibold">+ {formatCurrency(calculatedValues.totalMarkupValue)}</span>
+                          {calculatedValues.totalMarkupValue > 0 && <span className="text-sm text-primary-foreground/70">({calculatedValues.totalMarkupPercentage.toFixed(2)}%)</span>}
+                        </div>
                     </div>
-                     <Separator className="my-4 bg-primary-foreground/20"/>
-                    <div className="flex items-center justify-between pt-2">
-                        <span className="text-2xl font-bold">Prezzo Finale</span>
-                        <span className="text-4xl font-bold tracking-tight">{formatCurrency(calculatedValues.finalPrice)}</span>
+                     <Separator className="bg-primary-foreground/20"/>
+                    <div className="flex items-center justify-between pt-1">
+                        <span className="text-xl font-bold">Prezzo Finale</span>
+                        <span className="text-3xl font-bold tracking-tight">{formatCurrency(calculatedValues.finalPrice)}</span>
                     </div>
                 </div>
             </CardContent>
         </Card>
       </main>
         
-      <footer className="py-6 text-center text-sm text-muted-foreground">
+      <footer className="py-4 text-center text-sm text-muted-foreground">
         <p>&copy; {new Date().getFullYear()} CalcoloPrezzi Pro. Realizzato con eleganza.</p>
       </footer>
     </div>
