@@ -118,7 +118,7 @@ export default function Home() {
     placeholder: string,
     isPercentage: boolean = false
   ) => (
-    <Card className="flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300">
+    <Card className="flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300 bg-secondary">
       <CardHeader className="p-3 pb-2">
         <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
@@ -244,35 +244,35 @@ export default function Home() {
             </div>
         </div>
         
-        <Card className="mt-6 overflow-hidden bg-primary text-primary-foreground shadow-2xl">
+        <Card className="mt-6 overflow-hidden bg-primary/90 text-primary-foreground shadow-2xl dark:bg-primary/20 dark:text-foreground">
             <CardHeader className="p-3">
                 <CardTitle className="text-lg font-semibold">Riepilogo</CardTitle>
             </CardHeader>
             <CardContent className="p-3 pt-0">
                 <div className="space-y-1.5 text-sm">
                     <div className="grid grid-cols-[1fr_8ch_auto] gap-x-2 items-baseline">
-                        <span className="text-primary-foreground/80">Prezzo base totale</span>
+                        <span className="dark:text-foreground/80">Prezzo base totale</span>
                         <span/>
                         <span className="font-semibold justify-self-end">{formatCurrency(calculatedValues.totalBasePrice)}</span>
                     </div>
-                     <Separator className="bg-primary-foreground/20"/>
+                     <Separator className="bg-primary-foreground/20 dark:bg-foreground/20"/>
                      <div className="grid grid-cols-[1fr_8ch_auto] gap-x-2 items-baseline">
-                        <span className="text-primary-foreground/80">Sconto applicato</span>
+                        <span className="dark:text-foreground/80">Sconto applicato</span>
                         {calculatedValues.totalDiscountValue > 0 ? 
-                            <span className="text-sm text-primary-foreground/70 justify-self-end">({calculatedValues.totalDiscountPercentage.toFixed(2)}%)</span>
+                            <span className="text-sm dark:text-foreground/70 justify-self-end">({calculatedValues.totalDiscountPercentage.toFixed(2)}%)</span>
                             : <span/>
                         }
                         <span className="font-semibold justify-self-end">- {formatCurrency(calculatedValues.totalDiscountValue)}</span>
                     </div>
                     <div className="grid grid-cols-[1fr_8ch_auto] gap-x-2 items-baseline">
-                        <span className="text-primary-foreground/80">Ricarico applicato</span>
+                        <span className="dark:text-foreground/80">Ricarico applicato</span>
                         {calculatedValues.totalMarkupValue > 0 ? 
-                            <span className="text-sm text-primary-foreground/70 justify-self-end">({calculatedValues.totalMarkupPercentage.toFixed(2)}%)</span>
+                            <span className="text-sm dark:text-foreground/70 justify-self-end">({calculatedValues.totalMarkupPercentage.toFixed(2)}%)</span>
                             : <span/>
                         }
                         <span className="font-semibold justify-self-end">+ {formatCurrency(calculatedValues.totalMarkupValue)}</span>
                     </div>
-                     <Separator className="bg-primary-foreground/20"/>
+                     <Separator className="bg-primary-foreground/20 dark:bg-foreground/20"/>
                     <div className="grid grid-cols-[1fr_8ch_auto] items-center pt-1">
                         <span className="text-base font-bold">Prezzo Finale</span>
                         <span/>
