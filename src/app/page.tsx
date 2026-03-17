@@ -78,7 +78,6 @@ export default function Home() {
   };
 
   const handleReset = () => {
-    const newId = Date.now();
     setBasePrices([initialItem()]);
     setDiscounts([initialItem()]);
     setMarkups([initialItem()]);
@@ -98,7 +97,7 @@ export default function Home() {
       if (prev.length > 1) {
         return prev.filter((item) => item.id !== id);
       }
-      return prev;
+      return [{ ...prev[0], value: "" }];
     });
   };
 
@@ -120,10 +119,10 @@ export default function Home() {
     isPercentage: boolean = false
   ) => (
     <Card className="flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300">
-      <CardHeader className="p-4">
+      <CardHeader className="p-3 pb-2">
         <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow space-y-2 p-4 pt-0">
+      <CardContent className="flex-grow space-y-2 p-3 pt-0">
         {items.map((item, index) => (
           <Fragment key={item.id}>
             <div className="flex items-center gap-2">
@@ -142,7 +141,7 @@ export default function Home() {
                   step="0.01"
                   />
               </div>
-              {items.length > 1 && (
+              {items.length > 1 ? (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -152,7 +151,7 @@ export default function Home() {
                 >
                   <MinusCircle className="h-5 w-5" />
                 </Button>
-              )}
+              ) : <div className="h-9 w-9 shrink-0"/>}
             </div>
             {title === "Prezzi di Listino" && items.length > 1 && index < items.length - 1 && (
               <div className="flex justify-center">
@@ -162,8 +161,8 @@ export default function Home() {
           </Fragment>
         ))}
       </CardContent>
-      <div className="p-4 pt-0 mt-auto">
-        <Button variant="outline" size="sm" className="w-full" onClick={() => handleAddItem(setter)}>
+      <div className="p-3 pt-0 mt-auto">
+        <Button variant="outline" size="sm" className="w-full h-9" onClick={() => handleAddItem(setter)}>
             <PlusCircle className="mr-2 h-4 w-4" /> Aggiungi campo
         </Button>
       </div>
@@ -237,25 +236,27 @@ export default function Home() {
       </header>
 
       <main className="container mx-auto max-w-5xl px-4 pb-12">
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="space-y-4">
             {renderInputGroup("Prezzi di Listino", basePrices, setBasePrices, "Es. 100.00", false)}
-            {renderInputGroup("Sconti %", discounts, setDiscounts, "Es. 10", true)}
-            {renderInputGroup("Ricarichi %", markups, setMarkups, "Es. 20", true)}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {renderInputGroup("Sconti %", discounts, setDiscounts, "Es. 10", true)}
+                {renderInputGroup("Ricarichi %", markups, setMarkups, "Es. 20", true)}
+            </div>
         </div>
         
         <Card className="mt-6 overflow-hidden bg-primary text-primary-foreground shadow-2xl">
-            <CardHeader className="p-4">
+            <CardHeader className="p-3">
                 <CardTitle className="text-lg font-semibold">Riepilogo</CardTitle>
             </CardHeader>
-            <CardContent className="p-4 pt-0">
-                <div className="space-y-2 text-sm">
-                    <div className="grid grid-cols-[1fr_auto_auto] gap-x-4 items-baseline">
+            <CardContent className="p-3 pt-0">
+                <div className="space-y-1.5 text-sm">
+                    <div className="grid grid-cols-[1fr_8ch_auto] gap-x-2 items-baseline">
                         <span className="text-primary-foreground/80">Prezzo base totale</span>
                         <span/>
                         <span className="font-semibold justify-self-end">{formatCurrency(calculatedValues.totalBasePrice)}</span>
                     </div>
                      <Separator className="bg-primary-foreground/20"/>
-                     <div className="grid grid-cols-[1fr_auto_auto] gap-x-4 items-baseline">
+                     <div className="grid grid-cols-[1fr_8ch_auto] gap-x-2 items-baseline">
                         <span className="text-primary-foreground/80">Sconto applicato</span>
                         {calculatedValues.totalDiscountValue > 0 ? 
                             <span className="text-sm text-primary-foreground/70 justify-self-end">({calculatedValues.totalDiscountPercentage.toFixed(2)}%)</span>
@@ -263,7 +264,7 @@ export default function Home() {
                         }
                         <span className="font-semibold justify-self-end">- {formatCurrency(calculatedValues.totalDiscountValue)}</span>
                     </div>
-                    <div className="grid grid-cols-[1fr_auto_auto] gap-x-4 items-baseline">
+                    <div className="grid grid-cols-[1fr_8ch_auto] gap-x-2 items-baseline">
                         <span className="text-primary-foreground/80">Ricarico applicato</span>
                         {calculatedValues.totalMarkupValue > 0 ? 
                             <span className="text-sm text-primary-foreground/70 justify-self-end">({calculatedValues.totalMarkupPercentage.toFixed(2)}%)</span>
@@ -272,7 +273,7 @@ export default function Home() {
                         <span className="font-semibold justify-self-end">+ {formatCurrency(calculatedValues.totalMarkupValue)}</span>
                     </div>
                      <Separator className="bg-primary-foreground/20"/>
-                    <div className="grid grid-cols-[1fr_auto_auto] items-center pt-1">
+                    <div className="grid grid-cols-[1fr_8ch_auto] items-center pt-1">
                         <span className="text-base font-bold">Prezzo Finale</span>
                         <span/>
                         <span className="text-2xl font-bold tracking-tight justify-self-end">{formatCurrency(calculatedValues.finalPrice)}</span>
