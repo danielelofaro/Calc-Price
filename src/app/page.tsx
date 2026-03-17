@@ -133,9 +133,9 @@ export default function Home() {
     placeholder: string,
     isPercentage: boolean = false
   ) => (
-    <Card className="flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300 bg-secondary">
+    <Card className="flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300 bg-card">
       <CardHeader className="p-3 pb-2">
-        <CardTitle className="text-sm flex items-center gap-2">
+        <CardTitle className="text-xs flex items-center gap-2">
           <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${getDotColorClass(title)}`} />
           <span>{title}</span>
         </CardTitle>
@@ -153,7 +153,7 @@ export default function Home() {
                   placeholder={placeholder}
                   value={item.value}
                   onChange={(e) => handleItemChange(item.id, e.target.value, setter)}
-                  className={`pl-9 text-base ${items.length > 1 ? 'pr-10' : ''}`}
+                  className={`pl-9 text-xl ${items.length > 1 ? 'pr-10' : ''}`}
                   aria-label={`${title} ${index + 1}`}
                   min="0"
                   step="0.01"
@@ -182,7 +182,7 @@ export default function Home() {
       <div className="p-3 pt-0 mt-auto w-full">
         <div className="px-3">
             <Button variant="outline" size="default" className="w-full" onClick={() => handleAddItem(setter)}>
-                <PlusCircle className="mr-2 h-4 w-4" /> Aggiungi campo
+                <PlusCircle className="mr-2 h-4 w-4" /> Aggiungi
             </Button>
         </div>
       </div>
@@ -264,10 +264,10 @@ export default function Home() {
             </div>
         </div>
         
-        <Card className="mt-4 overflow-hidden bg-secondary shadow-2xl">
+        <Card className="mt-4 overflow-hidden bg-card shadow-2xl">
             <CardHeader className="p-3">
                 <CardTitle className="text-base font-semibold flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-[hsl(var(--chart-4))]"/>
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-green-500"/>
                   <span>Riepilogo</span>
                 </CardTitle>
             </CardHeader>
@@ -284,7 +284,7 @@ export default function Home() {
                             <span className="text-xs text-muted-foreground justify-self-end">({calculatedValues.totalDiscountPercentage.toFixed(2)}%)</span>
                             : <span/>
                         }
-                        <span className="font-semibold justify-self-end">- {formatCurrency(calculatedValues.totalDiscountValue)}</span>
+                        <span className="font-semibold justify-self-end text-destructive">- {formatCurrency(calculatedValues.totalDiscountValue)}</span>
                     </div>
                     <div className="grid grid-cols-[1fr_8ch_auto] gap-x-2 items-baseline">
                         <span>Ricarico applicato</span>
@@ -292,13 +292,13 @@ export default function Home() {
                             <span className="text-xs text-muted-foreground justify-self-end">({calculatedValues.totalMarkupPercentage.toFixed(2)}%)</span>
                             : <span/>
                         }
-                        <span className="font-semibold justify-self-end">+ {formatCurrency(calculatedValues.totalMarkupValue)}</span>
+                        <span className="font-semibold justify-self-end text-green-500">+ {formatCurrency(calculatedValues.totalMarkupValue)}</span>
                     </div>
                      <Separator className="bg-border/50"/>
-                     <div className="bg-accent/20 dark:bg-accent/10 text-accent-foreground -mx-3 -mb-3 mt-1.5 p-3 rounded-b-lg">
+                     <div className="bg-teal-500/20 dark:bg-teal-500/10 text-accent-foreground -mx-3 -mb-3 mt-1.5 p-3 rounded-b-lg">
                         <div className="grid grid-cols-[1fr_auto] items-center">
-                            <span className="text-base font-bold text-accent-foreground">Prezzo Finale</span>
-                            <span className="text-xl font-bold tracking-tight justify-self-end text-accent-foreground">{formatCurrency(calculatedValues.finalPrice)}</span>
+                            <span className="text-base font-bold text-teal-800 dark:text-teal-300">Prezzo Finale</span>
+                            <span className="text-xl font-bold tracking-tight justify-self-end text-teal-800 dark:text-teal-300">{formatCurrency(calculatedValues.finalPrice)}</span>
                         </div>
                     </div>
                 </div>
@@ -312,3 +312,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
