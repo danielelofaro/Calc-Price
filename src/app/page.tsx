@@ -135,7 +135,7 @@ export default function Home() {
   ) => (
     <Card className="flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300 bg-secondary">
       <CardHeader className="p-3 pb-2">
-        <CardTitle className="text-base flex items-center gap-2">
+        <CardTitle className="text-sm flex items-center gap-2">
           <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${getDotColorClass(title)}`} />
           <span>{title}</span>
         </CardTitle>
@@ -143,31 +143,33 @@ export default function Home() {
       <CardContent className="flex-grow space-y-2 p-3 pt-0">
         {items.map((item, index) => (
           <Fragment key={item.id}>
-            <div className="relative w-full">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  {isPercentage ? <Percent className="h-4 w-4 text-muted-foreground" /> : <Euro className="h-4 w-4 text-muted-foreground" />}
+            <div className="w-full px-3">
+              <div className="relative w-full">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    {isPercentage ? <Percent className="h-4 w-4 text-muted-foreground" /> : <Euro className="h-4 w-4 text-muted-foreground" />}
+                </div>
+                <Input
+                  type="number"
+                  placeholder={placeholder}
+                  value={item.value}
+                  onChange={(e) => handleItemChange(item.id, e.target.value, setter)}
+                  className={`pl-9 text-base ${items.length > 1 ? 'pr-10' : ''}`}
+                  aria-label={`${title} ${index + 1}`}
+                  min="0"
+                  step="0.01"
+                />
+                {items.length > 1 && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleRemoveItem(item.id, setter)}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-destructive"
+                    aria-label={`Rimuovi ${title} ${index + 1}`}
+                  >
+                    <MinusCircle className="h-5 w-5" />
+                  </Button>
+                )}
               </div>
-              <Input
-                type="number"
-                placeholder={placeholder}
-                value={item.value}
-                onChange={(e) => handleItemChange(item.id, e.target.value, setter)}
-                className={`pl-9 h-9 ${items.length > 1 ? 'pr-10' : ''}`}
-                aria-label={`${title} ${index + 1}`}
-                min="0"
-                step="0.01"
-              />
-              {items.length > 1 && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleRemoveItem(item.id, setter)}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-destructive h-9 w-9"
-                  aria-label={`Rimuovi ${title} ${index + 1}`}
-                >
-                  <MinusCircle className="h-5 w-5" />
-                </Button>
-              )}
             </div>
             {title === "Prezzi di Listino" && items.length > 1 && index < items.length - 1 && (
               <div className="flex justify-center">
@@ -177,10 +179,12 @@ export default function Home() {
           </Fragment>
         ))}
       </CardContent>
-      <div className="p-3 pt-0 mt-auto">
-        <Button variant="outline" size="sm" className="w-full h-9" onClick={() => handleAddItem(setter)}>
-            <PlusCircle className="mr-2 h-4 w-4" /> Aggiungi campo
-        </Button>
+      <div className="p-3 pt-0 mt-auto w-full">
+        <div className="px-3">
+            <Button variant="outline" size="default" className="w-full" onClick={() => handleAddItem(setter)}>
+                <PlusCircle className="mr-2 h-4 w-4" /> Aggiungi campo
+            </Button>
+        </div>
       </div>
     </Card>
   );
@@ -254,7 +258,7 @@ export default function Home() {
       <main className="container mx-auto max-w-4xl px-4 pb-8">
         <div className="space-y-4">
             {renderInputGroup("Prezzi di Listino", basePrices, setBasePrices, "Es. 100.00", false)}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
                 {renderInputGroup("Sconti %", discounts, setDiscounts, "Es. 10", true)}
                 {renderInputGroup("Ricarichi %", markups, setMarkups, "Es. 20", true)}
             </div>
