@@ -120,7 +120,7 @@ export default function Home() {
   ) => (
     <Card className="flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300 bg-secondary">
       <CardHeader className="p-3 pb-2">
-        <CardTitle className="text-lg">{title}</CardTitle>
+        <CardTitle className="text-base">{title}</CardTitle>
       </CardHeader>
       <CardContent className="flex-grow space-y-2 p-3 pt-0">
         {items.map((item, index) => (
@@ -213,13 +213,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-      <header className="py-4 text-center">
+      <header className="py-3 text-center">
         <div className="container mx-auto flex justify-center items-center relative">
           <div className="flex-1 text-center">
-            <h1 className="font-headline text-2xl font-bold tracking-tight text-primary md:text-3xl">
+            <h1 className="font-headline text-xl font-bold tracking-tight text-primary md:text-2xl">
               CalcoloPrezzi Pro
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-xs text-muted-foreground">
               Il tuo assistente per calcoli di prezzo rapidi ed eleganti.
             </p>
           </div>
@@ -235,55 +235,55 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="container mx-auto max-w-5xl px-4 pb-12">
+      <main className="container mx-auto max-w-4xl px-4 pb-8">
         <div className="space-y-4">
             {renderInputGroup("Prezzi di Listino", basePrices, setBasePrices, "Es. 100.00", false)}
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="grid grid-cols-2 gap-4">
                 {renderInputGroup("Sconti %", discounts, setDiscounts, "Es. 10", true)}
                 {renderInputGroup("Ricarichi %", markups, setMarkups, "Es. 20", true)}
             </div>
         </div>
         
-        <Card className="mt-6 overflow-hidden bg-primary/90 text-primary-foreground shadow-2xl dark:bg-primary/20 dark:text-foreground">
+        <Card className="mt-4 overflow-hidden bg-card dark:bg-zinc-900/50 shadow-2xl">
             <CardHeader className="p-3">
-                <CardTitle className="text-lg font-semibold">Riepilogo</CardTitle>
+                <CardTitle className="text-base font-semibold">Riepilogo</CardTitle>
             </CardHeader>
             <CardContent className="p-3 pt-0">
                 <div className="space-y-1.5 text-sm">
                     <div className="grid grid-cols-[1fr_8ch_auto] gap-x-2 items-baseline">
-                        <span className="dark:text-foreground/80">Prezzo base totale</span>
+                        <span>Prezzo base totale</span>
                         <span/>
                         <span className="font-semibold justify-self-end">{formatCurrency(calculatedValues.totalBasePrice)}</span>
                     </div>
-                     <Separator className="bg-primary-foreground/20 dark:bg-foreground/20"/>
+                     <Separator className="bg-border/50"/>
                      <div className="grid grid-cols-[1fr_8ch_auto] gap-x-2 items-baseline">
-                        <span className="dark:text-foreground/80">Sconto applicato</span>
+                        <span>Sconto applicato</span>
                         {calculatedValues.totalDiscountValue > 0 ? 
-                            <span className="text-sm dark:text-foreground/70 justify-self-end">({calculatedValues.totalDiscountPercentage.toFixed(2)}%)</span>
+                            <span className="text-xs text-muted-foreground justify-self-end">({calculatedValues.totalDiscountPercentage.toFixed(2)}%)</span>
                             : <span/>
                         }
                         <span className="font-semibold justify-self-end">- {formatCurrency(calculatedValues.totalDiscountValue)}</span>
                     </div>
                     <div className="grid grid-cols-[1fr_8ch_auto] gap-x-2 items-baseline">
-                        <span className="dark:text-foreground/80">Ricarico applicato</span>
+                        <span>Ricarico applicato</span>
                         {calculatedValues.totalMarkupValue > 0 ? 
-                            <span className="text-sm dark:text-foreground/70 justify-self-end">({calculatedValues.totalMarkupPercentage.toFixed(2)}%)</span>
+                            <span className="text-xs text-muted-foreground justify-self-end">({calculatedValues.totalMarkupPercentage.toFixed(2)}%)</span>
                             : <span/>
                         }
                         <span className="font-semibold justify-self-end">+ {formatCurrency(calculatedValues.totalMarkupValue)}</span>
                     </div>
-                     <Separator className="bg-primary-foreground/20 dark:bg-foreground/20"/>
+                     <Separator className="bg-border/50"/>
                     <div className="grid grid-cols-[1fr_8ch_auto] items-center pt-1">
                         <span className="text-base font-bold">Prezzo Finale</span>
                         <span/>
-                        <span className="text-2xl font-bold tracking-tight justify-self-end">{formatCurrency(calculatedValues.finalPrice)}</span>
+                        <span className="text-xl font-bold tracking-tight justify-self-end">{formatCurrency(calculatedValues.finalPrice)}</span>
                     </div>
                 </div>
             </CardContent>
         </Card>
       </main>
         
-      <footer className="py-4 text-center text-xs text-muted-foreground">
+      <footer className="py-3 text-center text-xs text-muted-foreground">
         <p>&copy; {new Date().getFullYear()} CalcoloPrezzi Pro. Realizzato con eleganza.</p>
       </footer>
     </div>
