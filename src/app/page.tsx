@@ -29,6 +29,8 @@ export default function Home() {
       if (savedTheme && ['light', 'dark'].includes(savedTheme)) {
         setTheme(savedTheme);
         document.documentElement.className = savedTheme;
+      } else {
+        document.documentElement.className = 'light';
       }
 
       const savedBasePrices = localStorage.getItem('basePrices');
@@ -141,33 +143,31 @@ export default function Home() {
       <CardContent className="flex-grow space-y-2 p-3 pt-0">
         {items.map((item, index) => (
           <Fragment key={item.id}>
-            <div className="flex items-center gap-2">
-              <div className="relative w-full">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      {isPercentage ? <Percent className="h-4 w-4 text-muted-foreground" /> : <Euro className="h-4 w-4 text-muted-foreground" />}
-                  </div>
-                  <Input
-                  type="number"
-                  placeholder={placeholder}
-                  value={item.value}
-                  onChange={(e) => handleItemChange(item.id, e.target.value, setter)}
-                  className="pl-9 h-9"
-                  aria-label={`${title} ${index + 1}`}
-                  min="0"
-                  step="0.01"
-                  />
+            <div className="relative w-full">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  {isPercentage ? <Percent className="h-4 w-4 text-muted-foreground" /> : <Euro className="h-4 w-4 text-muted-foreground" />}
               </div>
-              {items.length > 1 ? (
+              <Input
+                type="number"
+                placeholder={placeholder}
+                value={item.value}
+                onChange={(e) => handleItemChange(item.id, e.target.value, setter)}
+                className={`pl-9 h-9 ${items.length > 1 ? 'pr-10' : ''}`}
+                aria-label={`${title} ${index + 1}`}
+                min="0"
+                step="0.01"
+              />
+              {items.length > 1 && (
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => handleRemoveItem(item.id, setter)}
-                  className="text-muted-foreground hover:text-destructive shrink-0 h-9 w-9"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-destructive h-9 w-9"
                   aria-label={`Rimuovi ${title} ${index + 1}`}
                 >
                   <MinusCircle className="h-5 w-5" />
                 </Button>
-              ) : <div className="h-9 w-9 shrink-0"/>}
+              )}
             </div>
             {title === "Prezzi di Listino" && items.length > 1 && index < items.length - 1 && (
               <div className="flex justify-center">
@@ -269,9 +269,8 @@ export default function Home() {
             </CardHeader>
             <CardContent className="p-3 pt-0">
                 <div className="space-y-1.5 text-sm">
-                    <div className="grid grid-cols-[1fr_8ch_auto] gap-x-2 items-baseline">
+                    <div className="grid grid-cols-[1fr_auto] gap-x-2 items-baseline">
                         <span>Prezzo base totale</span>
-                        <span/>
                         <span className="font-semibold justify-self-end">{formatCurrency(calculatedValues.totalBasePrice)}</span>
                     </div>
                      <Separator className="bg-border/50"/>
@@ -292,7 +291,7 @@ export default function Home() {
                         <span className="font-semibold justify-self-end">+ {formatCurrency(calculatedValues.totalMarkupValue)}</span>
                     </div>
                      <Separator className="bg-border/50"/>
-                     <div className="bg-accent text-accent-foreground -mx-3 -mb-3 mt-1.5 p-3 rounded-b-lg">
+                     <div className="bg-accent/20 dark:bg-accent/10 text-accent-foreground -mx-3 -mb-3 mt-1.5 p-3 rounded-b-lg">
                         <div className="grid grid-cols-[1fr_auto] items-center">
                             <span className="text-base font-bold text-accent-foreground">Prezzo Finale</span>
                             <span className="text-xl font-bold tracking-tight justify-self-end text-accent-foreground">{formatCurrency(calculatedValues.finalPrice)}</span>
