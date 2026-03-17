@@ -111,6 +111,19 @@ export default function Home() {
     );
   };
   
+  const getDotColorClass = (title: string) => {
+    switch (title) {
+      case "Prezzi di Listino":
+        return "bg-[hsl(var(--chart-1))]";
+      case "Sconti %":
+        return "bg-[hsl(var(--chart-2))]";
+      case "Ricarichi %":
+        return "bg-[hsl(var(--chart-3))]";
+      default:
+        return "bg-muted-foreground";
+    }
+  };
+
   const renderInputGroup = (
     title: string,
     items: InputItem[],
@@ -120,7 +133,10 @@ export default function Home() {
   ) => (
     <Card className="flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300 bg-secondary">
       <CardHeader className="p-3 pb-2">
-        <CardTitle className="text-base">{title}</CardTitle>
+        <CardTitle className="text-base flex items-center gap-2">
+          <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${getDotColorClass(title)}`} />
+          <span>{title}</span>
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow space-y-2 p-3 pt-0">
         {items.map((item, index) => (
@@ -238,15 +254,18 @@ export default function Home() {
       <main className="container mx-auto max-w-4xl px-4 pb-8">
         <div className="space-y-4">
             {renderInputGroup("Prezzi di Listino", basePrices, setBasePrices, "Es. 100.00", false)}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {renderInputGroup("Sconti %", discounts, setDiscounts, "Es. 10", true)}
                 {renderInputGroup("Ricarichi %", markups, setMarkups, "Es. 20", true)}
             </div>
         </div>
         
-        <Card className="mt-4 overflow-hidden bg-card dark:bg-zinc-900/50 shadow-2xl">
+        <Card className="mt-4 overflow-hidden bg-secondary shadow-2xl">
             <CardHeader className="p-3">
-                <CardTitle className="text-base font-semibold">Riepilogo</CardTitle>
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-[hsl(var(--chart-4))]"/>
+                  <span>Riepilogo</span>
+                </CardTitle>
             </CardHeader>
             <CardContent className="p-3 pt-0">
                 <div className="space-y-1.5 text-sm">
@@ -273,10 +292,11 @@ export default function Home() {
                         <span className="font-semibold justify-self-end">+ {formatCurrency(calculatedValues.totalMarkupValue)}</span>
                     </div>
                      <Separator className="bg-border/50"/>
-                    <div className="grid grid-cols-[1fr_8ch_auto] items-center pt-1">
-                        <span className="text-base font-bold">Prezzo Finale</span>
-                        <span/>
-                        <span className="text-xl font-bold tracking-tight justify-self-end">{formatCurrency(calculatedValues.finalPrice)}</span>
+                     <div className="bg-accent text-accent-foreground -mx-3 -mb-3 mt-1.5 p-3 rounded-b-lg">
+                        <div className="grid grid-cols-[1fr_auto] items-center">
+                            <span className="text-base font-bold text-accent-foreground">Prezzo Finale</span>
+                            <span className="text-xl font-bold tracking-tight justify-self-end text-accent-foreground">{formatCurrency(calculatedValues.finalPrice)}</span>
+                        </div>
                     </div>
                 </div>
             </CardContent>
