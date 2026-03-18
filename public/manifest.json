@@ -3,9 +3,10 @@
   "short_name": "CalcoloPrezzi",
   "description": "Calcola un prezzo partendo da un prezzo di listino a cui applicare sconti e/o ricarichi.",
   "start_url": "/",
+  "id": "/?source=pwa",
   "display": "standalone",
-  "background_color": "#111827",
-  "theme_color": "#219ebc",
+  "background_color": "#1e293b",
+  "theme_color": "#0f172a",
   "icons": [
     {
       "src": "/icon-192.svg",

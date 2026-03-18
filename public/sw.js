@@ -1,61 +1,52 @@
-'use strict';
+// Choose a cache name
+const cacheName = 'calcoloprezzi-pro-v1';
 
-const CACHE_NAME = 'calcoloprezzi-pro-cache-v1';
-const FILES_TO_CACHE = [
-    '/',
-    '/manifest.json',
-    '/icon-192.svg',
-    '/icon-512.svg'
+// List the files to cache
+const filesToCache = [
+  '/',
+  '/manifest.json'
 ];
 
-self.addEventListener('install', (evt) => {
-    evt.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(FILES_TO_CACHE);
-        })
-    );
-    self.skipWaiting();
+// Install the service worker and cache the files
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    (async () => {
+      const cache = await caches.open(cacheName);
+      await cache.addAll(filesToCache);
+    })()
+  );
 });
 
-self.addEventListener('activate', (evt) => {
-    evt.waitUntil(
-        caches.keys().then((keyList) => {
-            return Promise.all(keyList.map((key) => {
-                if (key !== CACHE_NAME) {
-                    return caches.delete(key);
-                }
-            }));
-        })
-    );
-    self.clients.claim();
+// Fetch event: serve from cache first, then network
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    (async () => {
+      const r = await caches.match(e.request);
+      if (r) {
+        return r;
+      }
+      const response = await fetch(e.request);
+      const cache = await caches.open(cacheName);
+      // Don't cache everything, especially API calls
+      if (e.request.method === 'GET' && !e.request.url.includes('/api/')) {
+          cache.put(e.request, response.clone());
+      }
+      return response;
+    })()
+  );
 });
 
-self.addEventListener('fetch', (evt) => {
-    if (evt.request.method !== 'GET') {
-        evt.respondWith(fetch(evt.request));
-        return;
-    }
-
-    if (evt.request.headers.get('accept').includes('text/html')) {
-        evt.respondWith(
-            fetch(evt.request).catch(() => {
-                return caches.match('/');
-            })
-        );
-        return;
-    }
-
-    evt.respondWith(
-        caches.match(evt.request).then((response) => {
-            return response || fetch(evt.request).then((response) => {
-                if (response.status === 200) {
-                    const responseToCache = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(evt.request, responseToCache);
-                    });
-                }
-                return response;
-            });
+// Activate event: clean up old caches
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keyList) => {
+      return Promise.all(
+        keyList.map((key) => {
+          if (key !== cacheName) {
+            return caches.delete(key);
+          }
         })
-    );
+      );
+    })
+  );
 });
