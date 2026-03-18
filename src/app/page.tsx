@@ -307,7 +307,7 @@ export default function Home() {
       </main>
         
       <footer className="py-3 text-center text-xs text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} CalcoloPrezzi Pro. Realizzato con eleganza.</p>
+        <p>&copy; {new Date().getFullYear()} CalcoloPrezzi Pro di Daniele Lo Faro.</p>
       </footer>
     </div>
   );
