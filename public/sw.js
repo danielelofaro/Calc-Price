@@ -9,6 +9,7 @@ const filesToCache = [
 
 // Install the service worker and cache the files
 self.addEventListener('install', (e) => {
+  self.skipWaiting();// aggiunto
   e.waitUntil(
     (async () => {
       const cache = await caches.open(cacheName);
@@ -38,6 +39,7 @@ self.addEventListener('fetch', (e) => {
 
 // Activate event: clean up old caches
 self.addEventListener('activate', (e) => {
+  self.clients.claim(); // aggiunto
   e.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(
